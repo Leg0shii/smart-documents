@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public --no-clear"
+    "build": "rollup -c",
+    "start": "sirv public --no-clear --dev --port 5000 --host 0.0.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.0",
