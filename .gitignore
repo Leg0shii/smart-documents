@@ -1,5 +1,6 @@
 # Python ignores
 backend/venv/
+backend/alembic/README
 __pycache__/
 *.pyc
 
@@ -22,3 +23,6 @@ Thumbs.db
 .idea/
 *.sublime-workspace
 *.sublime-project
+
+# Config file
+.env
