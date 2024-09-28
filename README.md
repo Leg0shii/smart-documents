@@ -1,13 +1,3 @@
-Certainly! Below is the **updated README** that reflects the correct setup and integration of Alembic for database migrations in your Dockerized FastAPI project. The adjustments include:
-
-1. **Including Alembic in the Technology Stack**.
-2. **Adding a Database Migrations section** under Installation and Steps.
-3. **Updating the Project Structure** to include the `alembic` directory.
-4. **Providing detailed steps** for managing database migrations.
-5. **Ensuring clarity and completeness** throughout the documentation.
-
----
-
 # AI-Powered Web Application for Document Search and Analysis
 
 A project to develop a web application that allows users to upload documents and use AI methods to search and analyze them.
