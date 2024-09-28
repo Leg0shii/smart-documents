@@ -1,6 +1,13 @@
 # .pre-commit-config.yaml
 
 repos:
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.10.1  # Use the latest stable version
+    hooks:
+      - id: isort
+        name: isort
+        language_version: python3
+        files: ^backend/
   # Python hooks
   - repo: https://github.com/psf/black
     rev: 24.8.0
@@ -14,13 +21,6 @@ repos:
     hooks:
       - id: flake8
         additional_dependencies: [flake8]
-        files: ^backend/
-
-  - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v5.10.1
-    hooks:
-      - id: isort
-        language_version: python3
         files: ^backend/
 
   # JavaScript hooks
