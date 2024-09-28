@@ -1,7 +1,9 @@
 # backend/app/models.py
 
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Float, Integer, String
+
 from .database import Base
+
 
 class Item(Base):
     __tablename__ = "items"
