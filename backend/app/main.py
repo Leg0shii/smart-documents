@@ -1,7 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from .database import engine, Base
+from .routers import items  # Ensure this is correct
+
+Base.metadata.create_all(bind=engine)
 app = FastAPI()
+app.include_router(items.router)
 
 origins = [
     "http://localhost:5000",
