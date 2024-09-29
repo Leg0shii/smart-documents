@@ -1,34 +1,13 @@
 // frontend/rollup.config.js
-import { spawn } from 'child_process';
 import svelte from 'rollup-plugin-svelte';
 import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import css from 'rollup-plugin-css-only';
+import serve from 'rollup-plugin-serve';
 
 const production = !process.env.ROLLUP_WATCH;
-
-function serve() {
-    let server;
-
-    function toExit() {
-        if (server) server.kill(0);
-    }
-
-    return {
-        writeBundle() {
-            if (server) return;
-            server = spawn('npm', ['run', 'start', '--', '--dev'], {
-                stdio: ['ignore', 'inherit', 'inherit'],
-                shell: true
-            });
-
-            process.on('SIGTERM', toExit);
-            process.on('exit', toExit);
-        }
-    };
-}
 
 export default {
     input: 'src/main.js',
@@ -41,7 +20,6 @@ export default {
     plugins: [
         svelte({
             compilerOptions: {
-                // Enable run-time checks when not in production
                 dev: !production
             }
         }),
@@ -56,20 +34,23 @@ export default {
         }),
         commonjs(),
 
-        // In dev mode, call `npm run start` once
-        // the bundle has been generated
-        !production && serve(),
+        // In development, serve the app and enable HMR with history API fallback
+        !production && serve({
+            open: true,
+            contentBase: 'public',
+            historyApiFallback: true, // Handles client-side routing
+            port: 5000,               // Ensure this matches FRONTEND_PORT
+            host: '0.0.0.0'           // Bind to all interfaces for Docker
+        }),
 
-        // Watch the `public` directory and refresh the
-        // browser on changes when not in production
+        // Watch the `public` directory and refresh the browser on changes when not in production
         !production && livereload({
             watch: 'public',
             port: 35729,
             hostname: '0.0.0.0'  // Ensures LiveReload is accessible from the host
         }),
 
-        // If we're building for production (npm run build
-        // instead of npm run dev), minify
+        // If we're building for production, minify
         production && terser()
     ],
     watch: {
