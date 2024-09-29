@@ -33,6 +33,7 @@ class Document(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     title = Column(String(255), nullable=False, index=True)
     description = Column(Text, nullable=True)
+    # content = Column(Text)
     file_path = Column(String(500), nullable=False)
     uploaded_at = Column(DateTime, default=datetime.utcnow)
     summary = Column(Text, nullable=True)
