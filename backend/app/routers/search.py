@@ -18,11 +18,7 @@ async def semantic_search(search_request: SearchRequest, db: Session = Depends(g
     query = search_request.query
     top_k = search_request.top_k
 
-    # Perform semantic search using LangChain
-    results = await perform_semantic_search(query, top_k, db)
-
     try:
-        # Perform semantic search using LangChain
         results = await perform_semantic_search(query, top_k, db)
         return results
     except ValueError as ve:
