@@ -7,7 +7,7 @@ from app.ai import generate_embeddings, generate_summary
 from app.database import get_db
 from app.dependencies import get_current_user
 from app.models import Document, DocumentVersion, SearchIndex, Tag, User
-from app.schemas import DocumentResponse, DocumentUpdate
+from app.schemas import DocumentDetailResponse, DocumentResponse, DocumentUpdate
 from app.utils import save_file
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy.orm import Session
@@ -20,7 +20,7 @@ router = APIRouter(
 UPLOAD_DIR = "uploads/documents/"
 
 
-@router.post("/", response_model=DocumentResponse)
+@router.post("/upload/", response_model=DocumentResponse)
 async def upload_document(
     title: str = Form(...),
     description: Optional[str] = Form(None),
@@ -140,3 +140,28 @@ def delete_document(document_id: int, db: Session = Depends(get_db)):
     db.delete(document)
     db.commit()
     return {"detail": "Document deleted successfully"}
+
+
+@router.get("/details/{document_id}", response_model=DocumentDetailResponse)
+def get_document_details(document_id: int, db: Session = Depends(get_db)):
+    document = db.query(Document).filter(Document.id == document_id).first()
+    if not document:
+        raise HTTPException(status_code=404, detail="Document not found")
+
+    # Fetch uploader details
+    uploader = db.query(User).filter_by(id=document.user_id).first()
+
+    return {
+        "id": document.id,
+        "user_id": document.user_id,
+        "title": document.title,
+        "description": document.description,
+        "content": document.content,
+        "uploaded_at": document.uploaded_at,
+        "uploader": {
+            "id": uploader.id,
+            "username": uploader.username,
+            "email": uploader.email,
+        },
+        "tags": [tag.name for tag in document.tags],
+    }
