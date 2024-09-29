@@ -1,8 +1,7 @@
 # backend/app/routers/users.py
 from app.database import get_db
 from app.models import User
-from app.schemas import UserCreate, UserResponse
-from app.utils import hash_password
+from app.schemas import UserResponse
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -10,25 +9,6 @@ router = APIRouter(
     prefix="/users",
     tags=["users"],
 )
-
-
-@router.post("/", response_model=UserResponse)
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = (
-        db.query(User)
-        .filter((User.username == user.username) | (User.email == user.email))
-        .first()
-    )
-    if db_user:
-        raise HTTPException(
-            status_code=400, detail="Username or email already registered"
-        )
-    hashed_pw = hash_password(user.password)
-    new_user = User(username=user.username, email=user.email, hashed_password=hashed_pw)
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-    return new_user
 
 
 @router.get("/{user_id}", response_model=UserResponse)
