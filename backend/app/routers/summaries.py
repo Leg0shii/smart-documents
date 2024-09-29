@@ -1,5 +1,5 @@
 # backend/app/routers/summaries.py
-from app.ai import generate_summary  # Already implemented
+from app.ai import generate_summary
 from app.database import get_db
 from app.models import Document
 from app.schemas import SummaryRequest, SummaryResponse
@@ -23,10 +23,7 @@ async def generate_document_summary(
     if not document.file_path:
         raise HTTPException(status_code=400, detail="Document file path is missing")
 
-    # Generate summary
     summary = await generate_summary(document.file_path)
-
-    # Update document with summary
     document.summary = summary
     db.commit()
     db.refresh(document)
