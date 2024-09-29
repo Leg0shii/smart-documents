@@ -29,10 +29,8 @@ async def upload_document(
     current_user: User = Depends(get_current_user),
 ):
     user_id = current_user.id
-    # Save the uploaded file
-    file_path = save_file(file, UPLOAD_DIR)
 
-    # Create Document entry
+    file_path = save_file(file, UPLOAD_DIR)
     document = Document(
         user_id=user_id,
         title=title,
@@ -52,7 +50,7 @@ async def upload_document(
     db.commit()
     db.refresh(document)
 
-    # Create initial DocumentVersion
+    # initial DocumentVersion
     version = DocumentVersion(
         document_id=document.id,
         version_number=1,
@@ -62,7 +60,7 @@ async def upload_document(
     db.add(version)
     db.commit()
     db.refresh(version)
-    # Generate summary and embeddings (Assuming async)
+
     summary = await generate_summary(file_path)
     embeddings = await generate_embeddings(file_path)
 
@@ -74,7 +72,7 @@ async def upload_document(
     # Create SearchIndex entry
     search_index = SearchIndex(
         document_id=document.id,
-        embedding_vector=embeddings,  # Assuming embeddings are serialized appropriately
+        embedding_vector=embeddings,
     )
     db.add(search_index)
     db.commit()
@@ -114,7 +112,7 @@ def update_document(
         # Clear existing tags
         document.tags = []
         for tag_name in document_update.tags:
-            tag = db.query(Tag).filter(Tag.name == tag_name).first()
+            tag = db.query(Tag).filter_by(name=tag_name).first()
             if not tag:
                 tag = Tag(name=tag_name)
             document.tags.append(tag)
