@@ -1,48 +1,26 @@
 <!-- frontend/src/App.svelte -->
 <script>
-    import {onMount} from 'svelte';
-
-    export let name;
-    let apiMessage = "Loading...";
-
-    // Fetch the message when the component is mounted
-    onMount(async () => {
-        try {
-            const response = await fetch('http://localhost:8000/api/message');
-            const data = await response.json();
-            apiMessage = data.message;
-        } catch (error) {
-            console.error('Error fetching API message:', error);
-            apiMessage = "Failed to load message.";
-        }
-    });
+    import { Router, Route } from 'svelte-routing';
+    import Navbar from './components/Navbar.svelte';
+    import Home from './routes/Home.svelte';
+    import Login from './routes/Login.svelte';
+    import Register from './routes/Register.svelte';
+    import Upload from './routes/Upload.svelte';
+    import Search from './routes/Search.svelte';
+    import Summary from './routes/Summary.svelte';
 </script>
 
-<main>
-    <h1>Hello {name}!</h1>
-    <p>{apiMessage}</p>
-    <p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-    <p>This is some text ye</p>
-</main>
+<Navbar />
+
+<Router>
+    <Route path="/" component={Home} />
+    <Route path="/login" component={Login} />
+    <Route path="/register" component={Register} />
+    <Route path="/upload" component={Upload} />
+    <Route path="/search" component={Search} />
+    <Route path="/summary/:id" component={Summary} />
+</Router>
 
 <style>
-    main {
-        text-align: center;
-        padding: 1em;
-        max-width: 240px;
-        margin: 0 auto;
-    }
-
-    h1 {
-        color: #ff3e00;
-        text-transform: uppercase;
-        font-size: 4em;
-        font-weight: 100;
-    }
-
-    @media (min-width: 640px) {
-        main {
-            max-width: none;
-        }
-    }
+    /* Global styles can go here */
 </style>
