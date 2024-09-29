@@ -1,3 +1,4 @@
+# backend/app/main.py
 from app.database import Base, engine
 from app.routers import auth, documents, search, summaries, tags, users
 from fastapi import FastAPI

@@ -1,10 +1,10 @@
+# backend/app/routers/users.py
+from app.database import get_db
+from app.models import User
+from app.schemas import UserCreate, UserResponse
+from app.utils import hash_password
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
-from ..database import get_db
-from ..models import User
-from ..schemas import UserCreate, UserResponse
-from ..utils import hash_password  # Implement password hashing
 
 router = APIRouter(
     prefix="/users",
