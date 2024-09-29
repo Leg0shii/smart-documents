@@ -73,6 +73,19 @@ class DocumentVersionResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class DocumentDetailResponse(BaseModel):
+    id: int
+    user_id: int
+    title: str
+    description: Optional[str]
+    # content: str
+    uploaded_at: datetime
+    uploader: UserBase
+    tags: List[str] = []
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 class SearchIndexResponse(BaseModel):
     id: int
     document_id: int
