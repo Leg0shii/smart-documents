@@ -87,26 +87,39 @@ async def perform_semantic_search(
         search_indices = db.query(SearchIndex).all()
 
         texts = []
+        metadatas = []
         for index in search_indices:
             document = db.query(Document).filter_by(id=index.document_id).first()
             if document:
-                texts.append(document.description)
+                # Use the document's main content for semantic search
+                text = document.description  # Use the appropriate field
+                texts.append(text)
+
+                # Collect metadata
+                metadatas.append(
+                    {
+                        "id": document.id,
+                        "title": document.title,
+                        "summary": document.summary,
+                    }
+                )
 
         if not texts:
             logger.warning("No texts available for semantic search.")
             return []
 
-        vector_store = FAISS.from_texts(texts, embeddings)
+        # Create the FAISS vector store with texts and metadata
+        vector_store = FAISS.from_texts(texts, embeddings, metadatas=metadatas)
         similar_docs = vector_store.similarity_search(query, k=top_k)
 
         results = []
         for doc in similar_docs:
             result = SearchResult(
-                document_id=doc.metadata.get("id", 0),
+                document_id=int(doc.metadata.get("id", 0)),
                 title=doc.metadata.get("title", ""),
                 description=doc.page_content,
                 summary=doc.metadata.get("summary", ""),
-                relevance_score=0.0,  # FAISS's does not provide scores
+                relevance_score=0.0,
             )
             results.append(result)
 
