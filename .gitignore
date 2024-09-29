@@ -1,6 +1,7 @@
 # Python ignores
 backend/venv/
 backend/alembic/README
+backend/uploads
 __pycache__/
 *.pyc
 
