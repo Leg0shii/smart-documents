@@ -1,9 +1,8 @@
 from datetime import datetime
 
+from app.database import Base
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Table, Text
 from sqlalchemy.orm import relationship
-
-from .database import Base
 
 # Association Table for Many-to-Many relationship between Document and Tag
 document_tag_table = Table(
