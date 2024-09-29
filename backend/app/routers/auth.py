@@ -11,7 +11,7 @@ from jose import jwt
 from sqlalchemy.orm import Session
 
 # Secret key to encode JWT tokens
-SECRET_KEY = "your_secret_key_here"  # Replace with a secure key
+SECRET_KEY = "secret_key"  # no secure key needed for local
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -34,7 +34,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 
 @router.post("/login/", response_model=Token)
 def login(user_login: UserLogin, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.username == user_login.username).first()
+    user = db.query(User).filter_by(username=user_login.username).first()
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
     if not verify_password(user_login.password, user.hashed_password):
