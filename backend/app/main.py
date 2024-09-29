@@ -14,9 +14,7 @@ app.include_router(search.router)
 app.include_router(summaries.router)
 app.include_router(auth.router)
 
-origins = [
-    "http://localhost:5000",
-]
+origins = ["http://localhost:5000", "http://127.0.0.1:5000"]
 
 app.add_middleware(
     CORSMiddleware,
