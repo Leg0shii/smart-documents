@@ -27,7 +27,3 @@
         <DocumentDetails id={params.id} />
     </Route>
 </Router>
-
-<style>
-    /* Global styles can go here */
-</style>
