@@ -29,7 +29,7 @@
                 throw new Error(data.detail || 'Registration failed');
             }
 
-            // Optionally, log the user in immediately after registration
+            // automatic login after register
             const loginResponse = await fetch('http://localhost:8000/auth/login/', {
                 method: 'POST',
                 headers: {
@@ -48,10 +48,11 @@
             auth.set({
                 isAuthenticated: true,
                 token: loginData.access_token,
-                user: { username }, // You can fetch more user data if needed
+                user: { username }
             });
 
-            navigate('/'); // Redirect to home after successful registration and login
+            // redirect home
+            navigate('/');
         } catch (err) {
             error = err.message;
         }
