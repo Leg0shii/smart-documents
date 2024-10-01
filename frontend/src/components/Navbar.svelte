@@ -15,7 +15,7 @@
             token: null,
             user: null,
         });
-        window.location.href = '/login'; // Redirect to login page
+        window.location.href = '/login';
     };
 
     onDestroy(() => {
@@ -38,14 +38,10 @@
 <style>
     nav {
         display: flex;
+        align-items: center;
         gap: 1em;
         padding: 1em;
         background-color: #f0f0f0;
-    }
-
-    a {
-        text-decoration: none;
-        color: #333;
     }
 
     button {
@@ -54,5 +50,17 @@
         color: #333;
         cursor: pointer;
         font: inherit;
+    }
+
+    a {
+        padding: 0.5em;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #333;
+    }
+
+    a:hover {
+        background-color: #e63e00;
     }
 </style>
