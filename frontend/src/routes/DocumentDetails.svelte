@@ -47,6 +47,8 @@
     {#if documentDetails}
         <h1>{documentDetails.title}</h1>
         <p><strong>Description:</strong> {documentDetails.description}</p>
+        <p><strong>Summary:</strong></p>
+        <pre>{documentDetails.summary}</pre>
         <p><strong>Content:</strong></p>
         <pre>{documentDetails.content}</pre>
         <p><strong>Uploaded By:</strong> {documentDetails.uploader.username} ({documentDetails.uploader.email})</p>

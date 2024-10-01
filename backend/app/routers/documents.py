@@ -159,6 +159,7 @@ def get_document_details(document_id: int, db: Session = Depends(get_db)):
         "user_id": document.user_id,
         "title": document.title,
         "description": document.description,
+        "summary": document.summary,
         "content": document.content,
         "uploaded_at": document.uploaded_at,
         "uploader": {
