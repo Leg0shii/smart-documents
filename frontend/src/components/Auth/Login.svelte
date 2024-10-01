@@ -28,7 +28,7 @@
                 user: data.user,
             });
 
-            navigate('/'); // Redirect to home after successful login
+            navigate('/'); // redirect home
         } catch (err) {
             error = err.message;
         }
