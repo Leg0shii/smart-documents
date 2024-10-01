@@ -20,11 +20,9 @@
     };
 
     const handleUpload = async () => {
-        // Reset previous messages
         uploadStatus = '';
         error = '';
 
-        // Validate required fields
         if (!selectedFile) {
             error = "Please select a file to upload.";
             return;
@@ -40,7 +38,7 @@
         formData.append('title', title);
         formData.append('description', description);
 
-        // Handle tags (assuming comma-separated input)
+        // assume comma-separated input
         const tagsArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
         tagsArray.forEach(tag => formData.append('tags', tag));
 
@@ -60,7 +58,7 @@
             }
 
             uploadStatus = "Document uploaded successfully!";
-            // Optionally reset the form
+
             selectedFile = null;
             title = '';
             description = '';
