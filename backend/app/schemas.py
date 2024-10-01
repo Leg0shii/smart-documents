@@ -78,7 +78,7 @@ class DocumentDetailResponse(BaseModel):
     user_id: int
     title: str
     description: Optional[str]
-    # content: str
+    content: Optional[str]
     uploaded_at: datetime
     uploader: UserBase
     tags: List[str] = []

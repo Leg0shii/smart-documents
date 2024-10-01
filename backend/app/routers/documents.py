@@ -24,6 +24,7 @@ UPLOAD_DIR = "uploads/documents/"
 async def upload_document(
     title: str = Form(...),
     description: Optional[str] = Form(None),
+    content: Optional[str] = Form(None),
     tags: Optional[List[str]] = Form([]),
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
@@ -36,6 +37,7 @@ async def upload_document(
         user_id=user_id,
         title=title,
         description=description,
+        content=content,
         file_path=file_path,
         uploaded_at=datetime.utcnow(),
     )
@@ -66,7 +68,8 @@ async def upload_document(
     embeddings = await generate_embeddings(file_path)
 
     # Update Document with summary
-    document.summary = summary
+    document.summary = summary["summary"]
+    document.content = summary["full_text"]
     db.commit()
     db.refresh(document)
 
