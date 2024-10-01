@@ -61,6 +61,7 @@ async def generate_summary(file_path: str) -> str:
         )
 
 
+# generate numerical representations of the text, capture semantic information
 async def generate_embeddings(file_path: str) -> str:
     try:
         with open(file_path, "r", encoding="utf-8") as f:
@@ -108,7 +109,8 @@ async def perform_semantic_search(
             logger.warning("No texts available for semantic search.")
             return []
 
-        # Create the FAISS vector store with texts and metadata
+        # create a vector store from the collected texts and their embeddings
+        # vector store does efficient similarity searches by indexing the embeddings
         vector_store = FAISS.from_texts(texts, embeddings, metadatas=metadatas)
         similar_docs = vector_store.similarity_search(query, k=top_k)
 
