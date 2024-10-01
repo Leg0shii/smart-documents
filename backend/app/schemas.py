@@ -25,7 +25,7 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    password: str  # Plain password; will be hashed in the backend
+    password: str
 
 
 class UserResponse(UserBase):
