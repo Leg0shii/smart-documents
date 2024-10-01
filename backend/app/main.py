@@ -23,8 +23,3 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.get("/api/message")
-async def api_message():
-    return {"message": "Moin from FastAPI!"}
