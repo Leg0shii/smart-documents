@@ -22,7 +22,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-async def generate_summary(file_path: str) -> str:
+async def generate_summary(file_path: str) -> dict[str, str | list[str | dict]]:
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             text = f.read()
@@ -38,8 +38,7 @@ async def generate_summary(file_path: str) -> str:
             None, lambda: chat_llm.invoke(prompt)
         )
 
-        summary = summary_message.content
-
+        summary = {"summary": summary_message.content, "full_text": text}
         logger.info("Summary generated successfully.")
         return summary
 
