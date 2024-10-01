@@ -3,7 +3,6 @@
     import { onMount } from 'svelte';
     import auth from '../../stores/auth.js';
     import { get } from 'svelte/store';
-    import {Link} from "svelte-routing";
 
     let documents = [];
     let error = '';
