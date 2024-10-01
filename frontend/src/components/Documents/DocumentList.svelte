@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
     import auth from '../../stores/auth.js';
     import { get } from 'svelte/store';
+    import SearchResult from "../Search/SearchResult.svelte";
 
     let documents = [];
     let error = '';
@@ -45,12 +46,7 @@
     {#if documents.length > 0}
         <ul>
             {#each documents as doc}
-                <li>
-                    <h3>{doc.title}</h3>
-                    <p>{doc.description}</p>
-                    <a href={`/summary/${doc.id}`}>View Summary</a>
-                    <a href={`/document/${doc.id}`}>View Document</a>
-                </li>
+                <SearchResult {doc} />
             {/each}
         </ul>
     {:else if !loading && !error}
@@ -66,25 +62,5 @@
     ul {
         list-style: none;
         padding: 0;
-    }
-
-    li {
-        border: 1px solid #ccc;
-        padding: 1em;
-        border-radius: 5px;
-        margin-bottom: 1em;
-    }
-
-    h3 {
-        margin: 0 0 0.5em 0;
-    }
-
-    a {
-        color: #ff3e00;
-        text-decoration: none;
-    }
-
-    a:hover {
-        text-decoration: underline;
     }
 </style>

@@ -101,7 +101,6 @@
 </main>
 
 <style>
-    /* Add your styles here */
     main {
         padding: 1em;
     }

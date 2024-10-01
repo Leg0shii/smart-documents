@@ -31,7 +31,6 @@
 </div>
 
 <style>
-    /* Add your styles here */
     div {
         display: flex;
         gap: 0.5em;
