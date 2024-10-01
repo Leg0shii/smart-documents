@@ -1,4 +1,5 @@
 # backend/app/dependencies.py
+import os
 
 from app.database import get_db
 from app.models import User
@@ -9,8 +10,8 @@ from jose import JWTError, jwt
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
-# no secure key needed for local
-SECRET_KEY = "secret_key"  # Must match auth.py
+# Must match auth.py
+SECRET_KEY = os.getenv("SECRET_KEY", "secret_key")
 ALGORITHM = "HS256"
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login/")

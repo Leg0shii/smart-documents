@@ -1,5 +1,5 @@
 # backend/app/routers/auth.py
-
+import os
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -11,8 +11,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from jose import jwt
 from sqlalchemy.orm import Session
 
-# Secret key to encode JWT tokens
-SECRET_KEY = "secret_key"  # Use a secure key in production
+# Must match auth.py
+SECRET_KEY = os.getenv("SECRET_KEY", "secret_key")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
