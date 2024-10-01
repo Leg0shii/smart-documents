@@ -1,12 +1,11 @@
 # backend/app/routers/tags.py
 from typing import List
 
+from app.database import get_db
+from app.models import Tag
+from app.schemas import TagCreate, TagResponse
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
-from ..database import get_db
-from ..models import Tag
-from ..schemas import TagCreate, TagResponse
 
 router = APIRouter(
     prefix="/tags",
@@ -16,7 +15,7 @@ router = APIRouter(
 
 @router.post("/", response_model=TagResponse)
 def create_tag(tag: TagCreate, db: Session = Depends(get_db)):
-    db_tag = db.query(Tag).filter(Tag.name == tag.name).first()
+    db_tag = db.query(Tag).filter_by(name=tag.name).first()
     if db_tag:
         raise HTTPException(status_code=400, detail="Tag already exists")
     new_tag = Tag(name=tag.name)
