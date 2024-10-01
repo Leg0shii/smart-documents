@@ -1,6 +1,5 @@
 <!-- Inside src/components/Search/SearchResult.svelte -->
 <script>
-    import { Link } from 'svelte-routing';
     export let result;
 </script>
 
