@@ -28,6 +28,7 @@
     {#if authState.isAuthenticated}
         <a href="/upload">Upload Document</a>
         <a href="/search">Search</a>
+        <a href="/chat">Chat</a>
         <button on:click={handleLogout}>Logout</button>
     {:else}
         <a href="/login">Login</a>
