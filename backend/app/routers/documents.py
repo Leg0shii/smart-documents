@@ -6,8 +6,8 @@ from typing import List, Optional
 from app.ai import generate_embeddings, generate_summary
 from app.database import get_db
 from app.dependencies import get_current_user
-from app.embeddings.ollama_embeddings import OllamaEmbeddingsAdapter
-from app.llm.ollama_llm import OllamaLLMAdapter
+from app.embeddings.openai_embeddings import OpenAIEmbeddingsAdapter
+from app.llm.openai_llm import OpenAILLMAdapter
 from app.models import Document, DocumentVersion, SearchIndex, Tag, User
 from app.schemas import DocumentDetailResponse, DocumentResponse, DocumentUpdate
 from app.utils import save_file
@@ -66,8 +66,8 @@ async def upload_document(
     db.commit()
     db.refresh(version)
 
-    summary = await generate_summary(file_path, OllamaLLMAdapter())
-    embeddings = await generate_embeddings(file_path, OllamaEmbeddingsAdapter())
+    summary = await generate_summary(file_path, OpenAILLMAdapter())
+    embeddings = await generate_embeddings(file_path, OpenAIEmbeddingsAdapter())
 
     # Update Document with summary
     document.summary = summary["summary"]
