@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class TagBase(BaseModel):
@@ -121,6 +121,19 @@ class ChunkSearchResult(BaseModel):
     relevance_score: float
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class Citation(BaseModel):
+    source_id: int = Field(..., description="The ID of the source used.")
+    quote: str = Field(..., description="The exact text from the source.")
+    source_title: str = Field(..., description="The title of the source.")
+
+
+class CitedAnswer(BaseModel):
+    answer: str = Field(..., description="The assistant's answer.")
+    citations: List[Citation] = Field(
+        ..., description="List of citations used in the answer."
+    )
 
 
 class SummaryRequest(BaseModel):
