@@ -1,4 +1,5 @@
 # backend/app/routers/documents.py
+import json
 import os
 from datetime import datetime
 from typing import List, Optional
@@ -8,7 +9,7 @@ from app.database import get_db
 from app.dependencies import get_current_user
 from app.embeddings.openai_embeddings import OpenAIEmbeddingsAdapter
 from app.llm.openai_llm import OpenAILLMAdapter
-from app.models import Document, DocumentVersion, SearchIndex, Tag, User
+from app.models import Document, DocumentChunk, DocumentVersion, SearchIndex, Tag, User
 from app.schemas import DocumentDetailResponse, DocumentResponse, DocumentUpdate
 from app.utils import save_file
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
@@ -74,6 +75,16 @@ async def upload_document(
     document.content = summary["full_text"]
     db.commit()
     db.refresh(document)
+
+    print(embeddings)
+    for chunk_text, embedding_vector in embeddings:
+        chunk = DocumentChunk(
+            document_id=document.id,
+            chunk_text=chunk_text,
+            embedding_vector=json.dumps(embedding_vector),
+        )
+        db.add(chunk)
+    db.commit()
 
     # Create SearchIndex entry
     search_index = SearchIndex(

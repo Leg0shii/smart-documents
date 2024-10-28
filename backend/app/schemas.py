@@ -90,7 +90,7 @@ class DocumentDetailResponse(BaseModel):
 class SearchIndexResponse(BaseModel):
     id: int
     document_id: int
-    embedding_vector: str  # Adjust type as needed
+    embedding_vector: str
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -107,6 +107,17 @@ class SearchResult(BaseModel):
     title: str
     description: Optional[str]
     summary: Optional[str]
+    relevance_score: float
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+# schemas.py
+class ChunkSearchResult(BaseModel):
+    document_id: int
+    title: str
+    chunk_id: int
+    chunk_text: str
     relevance_score: float
 
     model_config = ConfigDict(from_attributes=True)
@@ -141,3 +152,18 @@ class UserLogin(BaseModel):
 
 class TokenWithUser(Token):
     user: UserResponse
+
+
+class ChatMessage(BaseModel):
+    sender: str
+    text: str
+    time: str
+
+
+class ChatRequest(BaseModel):
+    message: str
+    history: List[ChatMessage]
+
+
+class ChatResponse(BaseModel):
+    reply: str

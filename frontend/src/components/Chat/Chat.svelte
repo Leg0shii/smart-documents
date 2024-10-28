@@ -1,14 +1,60 @@
 <script>
-    // Mock data for messages
-    let messages = [
-      { id: 1, sender: 'Alice', text: 'Hello!', time: '10:00 AM' },
-      { id: 2, sender: 'You', text: 'Hi Alice! Hi Alice! Hi Alice! Hi Alice! Hi Alice! Hi Alice! Hi Alice! Hi Alice! Hi Alice! Hi Alice!', time: '10:01 AM' },
-      { id: 3, sender: 'Alice', text: 'How are you?', time: '10:02 AM' },
-      { id: 4, sender: 'You', text: 'I am good, thanks!', time: '10:03 AM' },
-    ];
-  
-    let newMessage = '';
+  let messages = [
+    // Existing messages...
+  ];
+
+  let newMessage = '';
+
+  async function sendMessage() {
+    if (newMessage.trim() !== '') {
+      // Add the new message to the messages array
+      messages = [
+        ...messages,
+        {
+          id: messages.length + 1,
+          sender: 'You',
+          text: newMessage,
+          time: new Date().toLocaleTimeString(),
+        },
+      ];
+
+      // Prepare the conversation history (last 10 messages)
+      const history = messages.slice(-10);
+
+      // Send the new message and history to the backend
+      try {
+        const response = await fetch('http://localhost:8000/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ message: newMessage, history: history }),
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+
+        // Add the response message to the messages array
+        messages = [
+          ...messages,
+          {
+            id: messages.length + 1,
+            sender: 'Assistant',
+            text: data.reply,
+            time: new Date().toLocaleTimeString(),
+          },
+        ];
+      } catch (error) {
+        console.error('Error:', error);
+      }
+
+      // Clear the input field
+      newMessage = '';
+    }
+  }
 </script>
+
 
 <main>
     <!-- Header -->
@@ -34,7 +80,7 @@
         placeholder="Ask something about your documents..."
         bind:value={newMessage}
       />
-      <button>Send</button>
+      <button on:click={sendMessage}>Send</button>
     </div>
 </main>
 

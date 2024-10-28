@@ -3,10 +3,11 @@ import json
 import logging
 from typing import List
 
+import numpy as np
 from app.embeddings.base import EmbeddingsBase
 from app.llm.base import LLMBase
-from app.models import Document, SearchIndex
-from app.schemas import SearchResult
+from app.models import Document, DocumentChunk, SearchIndex
+from app.schemas import ChunkSearchResult, SearchResult
 from dotenv import load_dotenv
 from fastapi import HTTPException
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -57,7 +58,9 @@ async def generate_summary(
 
 
 # generate numerical representations of the text, capture semantic information
-async def generate_embeddings(file_path: str, embeddings: EmbeddingsBase = None) -> str:
+async def generate_embeddings(
+    file_path: str, embeddings: EmbeddingsBase = None
+) -> [list[str], str]:
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             text = f.read()
@@ -65,10 +68,9 @@ async def generate_embeddings(file_path: str, embeddings: EmbeddingsBase = None)
         splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
         chunks = splitter.split_text(text)
         document_embeddings = embeddings.embed_documents(chunks)
-        embeddings_json = json.dumps(document_embeddings)
         logger.info("Embeddings generated successfully.")
 
-        return embeddings_json
+        return list(zip(chunks, document_embeddings))
     except Exception as e:
         logger.error(f"Error generating embeddings: {e}")
         return "An error occurred while generating embeddings."
@@ -103,7 +105,6 @@ async def perform_semantic_search(
             return []
 
         # create a vector store from the collected texts and their embeddings
-        # vector store does efficient similarity searches by indexing the embeddings
         vector_store = FAISS.from_texts(texts, embeddings, metadatas=metadatas)
         similar_docs = vector_store.similarity_search(query, k=top_k)
 
@@ -124,4 +125,72 @@ async def perform_semantic_search(
         return results
     except Exception as e:
         logger.error(f"Error performing semantic search: {e}", exc_info=True)
+        return []
+
+
+async def perform_semantic_search_chunks(
+    query: str, top_k: int, db: Session, embeddings: EmbeddingsBase
+) -> List[ChunkSearchResult]:
+    try:
+        # Retrieve all chunks
+        chunks = db.query(DocumentChunk).all()
+
+        texts = []
+        metadatas = []
+        stored_embeddings = []
+
+        for chunk in chunks:
+            texts.append(chunk.chunk_text)
+            metadatas.append(
+                {
+                    "chunk_id": chunk.id,
+                    "document_id": chunk.document_id,
+                    "title": chunk.document.title,
+                }
+            )
+            embedding_vector = json.loads(chunk.embedding_vector)
+            stored_embeddings.append(embedding_vector)
+
+        if not texts:
+            logger.warning("No chunks available for semantic search.")
+            return []
+
+        # Prepare embeddings
+        stored_embeddings = np.array(stored_embeddings)
+        text_embeddings = list(zip(texts, stored_embeddings))
+
+        # Create vector store
+        vector_store = FAISS.from_embeddings(
+            text_embeddings=text_embeddings,
+            embedding=embeddings,
+            metadatas=metadatas,
+        )
+
+        # Embed query and search
+        query_embedding = embeddings.embed_query(query)
+        similar_docs = vector_store.similarity_search_by_vector(
+            query_embedding, k=top_k
+        )
+
+        # Prepare results
+        results = []
+        for doc in similar_docs:
+            result = ChunkSearchResult(
+                chunk_id=doc.metadata.get("chunk_id"),
+                document_id=doc.metadata.get("document_id"),
+                title=doc.metadata.get("title"),
+                chunk_text=doc.page_content,
+                relevance_score=0.0,  # Compute if needed
+            )
+            results.append(result)
+
+        logger.info(
+            f"Semantic search completed successfully. Found {len(results)} results."
+        )
+        return results
+
+    except Exception as e:
+        logger.error(
+            f"Error performing semantic search with chunks: {e}", exc_info=True
+        )
         return []

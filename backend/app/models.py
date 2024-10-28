@@ -44,6 +44,18 @@ class Document(Base):
     )
     tags = relationship("Tag", secondary=document_tag_table, back_populates="documents")
     search_index = relationship("SearchIndex", uselist=False, back_populates="document")
+    chunks = relationship(
+        "DocumentChunk", back_populates="document", cascade="all, delete-orphan"
+    )
+
+
+class DocumentChunk(Base):
+    __tablename__ = "document_chunks"
+    id = Column(Integer, primary_key=True, index=True)
+    document_id = Column(Integer, ForeignKey("documents.id"), nullable=False)
+    chunk_text = Column(Text, nullable=False)
+    embedding_vector = Column(Text, nullable=False)
+    document = relationship("Document", back_populates="chunks")
 
 
 class DocumentVersion(Base):
