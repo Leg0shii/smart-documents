@@ -7,6 +7,7 @@
     import Register from './routes/Register.svelte';
     import Upload from './routes/Upload.svelte';
     import Search from './routes/Search.svelte';
+    import Chat from './components/Chat/Chat.svelte';
     import Summary from './routes/Summary.svelte';
     import DocumentDetails from './routes/DocumentDetails.svelte';
 </script>
@@ -19,6 +20,7 @@
     <Route path="/register" component={Register} />
     <Route path="/upload" component={Upload} />
     <Route path="/search" component={Search} />
+    <Route path="/chat" component={Chat} />
 
     <Route path="/summary/:id" let:params>
         <Summary id={params.id} />
