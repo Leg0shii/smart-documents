@@ -6,6 +6,7 @@ This is an AI-powered web application that allows users to upload documents, per
 
 - **Document Upload**: Upload documents for search and analysis.
 - **Semantic Search**: Perform AI-based contextual searches using LLMs.
+- **Chat with Documents**: Chat with your documents using LLMs.
 - **Text Summarization**: Generate concise summaries of document content.
 - **User Authentication**: Secure login and registration with JWT tokens.
 
